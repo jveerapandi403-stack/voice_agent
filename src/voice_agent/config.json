@@ -1,0 +1,81 @@
+{
+  "type": "Settings",
+  "audio": {
+    "input": {
+      "encoding": "linear16",
+      "sample_rate": 8000
+    },
+    "output": {
+      "encoding": "linear16",
+      "sample_rate": 8000,
+      "container": "none"
+    }
+  },
+  "agent": {
+    "language": "en",
+    "listen": {
+      "provider": {
+        "type": "deepgram",
+        "model": "nova-3"
+      }
+    },
+    "think": {
+      "provider": {
+        "type": "open_ai",
+        "model": "gpt-4o-mini"
+      },
+      "prompt": "You are a friendly, concise, and professional AI receptionist for a local business. Greet the caller, understand their reason for calling, and collect their name, phone number, reason for calling, requirement, preferred date and time, and any other relevant notes. Ask one clear follow-up question at a time, and do not ask again for information the caller has already provided. Once you have collected the details, read them back in a short, natural spoken summary and ask whether everything is correct. If the caller corrects anything, update it and read back the corrected details for confirmation. Do not invent business information or promise appointments or services that have not been confirmed. Speak in plain natural sentences only: never use Markdown, asterisks, bullet points, or formatting symbols. Never mention email, sending a message, or internal tools. Only after the caller confirms the complete summary and indicates they are finished, call submit_customer_enquiry with the confirmed details, then say a brief goodbye and stop speaking. Do not ask another question or continue the conversation after the goodbye.",
+      "functions": [
+        {
+          "name": "submit_customer_enquiry",
+          "description": "Record the customer's enquiry after the caller has confirmed all details and is finished. Use this function only after the caller confirms the complete summary.",
+          "defer_until_eot": true,
+          "parameters": {
+            "type": "object",
+            "properties": {
+              "customer_name": {
+                "type": "string",
+                "description": "The customer's name"
+              },
+              "customer_phone": {
+                "type": "string",
+                "description": "The customer's contact number"
+              },
+              "reason_for_call": {
+                "type": "string",
+                "description": "Why the customer is calling"
+              },
+              "customer_requirement": {
+                "type": "string",
+                "description": "What the customer needs"
+              },
+              "preferred_date_time": {
+                "type": "string",
+                "description": "The customer's preferred date and time, if applicable"
+              },
+              "additional_notes": {
+                "type": "string",
+                "description": "Any other relevant details provided by the customer"
+              }
+            },
+            "required": [
+              "customer_name",
+              "customer_phone",
+              "reason_for_call",
+              "customer_requirement",
+              "preferred_date_time",
+              "additional_notes"
+            ]
+          }
+        }
+      ]
+    },
+    "speak": {
+      "provider": {
+        "type": "deepgram",
+        "model": "aura-2-thalia-en"
+      }
+    },
+    "greeting": "Hello! I am your AI voice assistant. How can I help you today?"
+  }
+}
